@@ -1,11 +1,9 @@
-import "./App.css";
-
+import "./App.scss";
+import Products from "./components/Products"
 function App() {
   return (
     <div className="App">
-      <button className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded">
-        Button
-      </button>
+      <Products />
     </div>
   );
 }
