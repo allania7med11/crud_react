@@ -1,5 +1,5 @@
-import "./App.scss";
-import Products from "./components/Products"
+import "@app/App.scss";
+import Products from "@cps/Products"
 function App() {
   return (
     <div className="App">

@@ -1,10 +1,14 @@
+import "./index.scss"
 import Form from "./Form";
 import Table from "./Table";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import { faPlus } from "@fortawesome/free-solid-svg-icons";
 const Products = () => (
-  <div>
-     <button className="btn bg-primary">
-        New Product
-      </button>
+  <div className="products">
+    <button className="btn bg-primary">
+      <FontAwesomeIcon className="mx-1" icon={faPlus} />
+      New product
+    </button>
     <Form />
     <Table />
   </div>
