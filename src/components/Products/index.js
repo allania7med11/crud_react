@@ -1,4 +1,5 @@
-import React, { useState } from "react";
+import api from "@app/apis/product";
+import React, { useState, useEffect, useCallback } from "react";
 import "./index.scss";
 import Form from "./Form";
 import Table from "./Table";
@@ -13,18 +14,26 @@ const stateDefault = {
     price: "",
     description: "",
   },
+  products: [],
 };
 const Products = () => {
   const [state, setState] = useState(stateDefault);
-  const updateProduct = ({ target }) =>
-    setState({
-      ...state,
-      product: { ...state.product, [target.name]: target.value },
-    });
+  const updateProducts = useCallback(async () => {
+    try {
+      let response = await api.read();
+      setState({ ...state, products: response.data, show: false });
+    } catch (err) {
+      console.log({ err });
+    }
+  }, []);
+  useEffect(() => {
+    updateProducts();
+  }, [updateProducts]);
   const open = (action, product) => {
     setState({ action, product, show: true });
   };
   const close = () => setState({ ...state, show: false });
+
   return (
     <div className="products">
       <button
@@ -35,11 +44,17 @@ const Products = () => {
         New product
       </button>
       {state.show ? (
-        <Form product={state.product} updateProduct={updateProduct} close={close} />
+        <Form
+          action={state.action}
+          productInit={state.product}
+          close={close}
+          updateProducts={updateProducts}
+        />
       ) : (
         ""
       )}
       <Table />
+      {JSON.stringify(state.products)}
     </div>
   );
 };
