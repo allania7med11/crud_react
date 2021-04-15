@@ -2,45 +2,47 @@ import api from "@app/apis/product";
 import React, { useRef, useState } from "react";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faTimes, faPlus } from "@fortawesome/free-solid-svg-icons";
-const Form = ({ action, productInit, close, updateProducts }) => {
-  const [product, setProduct] = useState(productInit);
-  const updateProduct = ({ target }) =>
-    setProduct({ ...product, [target.name]: target.value });
-  const updatePrice = ({ target }) => {
-    let evt = {};
-    evt.target = { name: target.name, value: parseFloat(target.value) };
-    updateProduct(evt);
+const submitChoice = {
+  create: (product) => api.create(product),
+  update: (product) => api.update(product._id, product),
+  delete: (product) => api.delete(product._id, product),
+};
+
+function useProduct({ productInit, action, update }) {
+  const [state, setState] = useState(productInit);
+  const updateState = (newState) => {
+    setState({ ...state, ...newState });
   };
+  const methods = {
+    updateProduct: ({target}) => updateState({ [target.name]: target.value }),
+    submit: async () => {
+      let obj = { ...state, value: parseFloat(state.value) };
+      await submitChoice[action](obj);
+      update();
+    },
+  };
+  return [state, methods];
+}
+function useModal(close) {
   const modalRef = useRef();
   const updateShow = (evt) => {
     if (evt.target === modalRef.current) {
       close();
     }
   };
-  const submit = async (evt) => {
-    evt.preventDefault();
-    try {
-      switch (action) {
-        case "create":
-          await api.create(product);
-          break;
-        case "update":
-          await api.update(product._id, product);
-          break;
-        case "delete":
-          await api.delete(product._id);
-          break;
-        default: // Do nothing
-      }
-      await updateProducts();
-    } catch (err) {
-      console.log({ err });
-    }
-  };
-
+  return [modalRef, updateShow];
+}
+const Form = ({ action, productInit, close, update }) => {
+  const [product, { updateProduct, submit }] = useProduct({
+    productInit,
+    action,
+    update,
+  });
+  const [modalRef, updateShow] = useModal(close);
   return (
     <div ref={modalRef} onClick={updateShow} className="modal">
       <div className="card">
+        {JSON.stringify(product)}
         <div onClick={close} className="close">
           <FontAwesomeIcon className="mx-1" icon={faTimes} />
         </div>
@@ -57,7 +59,7 @@ const Form = ({ action, productInit, close, updateProducts }) => {
           <label htmlFor="fprice">Price:</label>
           <input
             value={product.price}
-            onChange={updatePrice}
+            onChange={updateProduct}
             type="number"
             id="fprice"
             name="price"
