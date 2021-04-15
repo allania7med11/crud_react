@@ -5,7 +5,7 @@ import { faTimes, faPlus } from "@fortawesome/free-solid-svg-icons";
 const submitChoice = {
   create: (product) => api.create(product),
   update: (product) => api.update(product._id, product),
-  delete: (product) => api.delete(product._id, product),
+  delete: (product) => api.delete(product._id),
 };
 
 function useProduct({ productInit, action, update }) {
@@ -42,7 +42,6 @@ const Form = ({ action, productInit, close, update }) => {
   return (
     <div ref={modalRef} onClick={updateShow} className="modal">
       <div className="card">
-        {JSON.stringify(product)}
         <div onClick={close} className="close">
           <FontAwesomeIcon className="mx-1" icon={faTimes} />
         </div>
