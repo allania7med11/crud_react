@@ -24,34 +24,40 @@ function useProducts(initial) {
   const methods = {
     create: () =>
       updateState({ action: "create", product: initial.product, show: true }),
+    update: (product) =>
+      updateState({ action: "update", product: product, show: true }),
+    delete: (product) =>
+      updateState({ action: "delete", product: product, show: true }),
     close: () => updateState({ show: false }),
-    update: async () => {
+    read: async () => {
       let response = await api.read();
       updateState({ products: response.data, show: false });
     },
   };
-  useEffect(methods.update, []);
+  useEffect(methods.read, []);
   return [state, methods];
 }
 const Products = () => {
-  const [state, { create, close, update }] = useProducts(initial);
+  const [state, methods] = useProducts(initial);
   return (
     <div className="products">
-      <button onClick={create} className="btn bg-primary">
+      <button onClick={methods.create} className="btn bg-primary">
         <FontAwesomeIcon className="mx-1" icon={faPlus} />
         New product
       </button>
-      {JSON.stringify(state)}
       {state.show && (
         <Form
           action={state.action}
           productInit={state.product}
-          close={close}
-          update={update}
+          close={methods.close}
+          read={methods.read}
         />
       )}
-      <Table />
-      {JSON.stringify(state.products)}
+      <Table
+        products={state.products}
+        update={methods.update}
+        delet={methods.delete}
+      />
     </div>
   );
 };

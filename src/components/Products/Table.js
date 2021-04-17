@@ -1,3 +1,4 @@
+import "@css/Table.scss";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faPencilAlt, faTrash } from "@fortawesome/free-solid-svg-icons";
 const fields = [
@@ -5,31 +6,42 @@ const fields = [
   { label: "Price", value: "price" },
   { label: "Description", value: "description" },
 ];
-const Product = ({ product }) => {
+const Product = ({ product, row, update, delet }) => {
+  var classRow = `item col rg_${Number(row) % 2}`;
   return (
     <>
-      {fields.map((field) => (
-        <div className="header">{product[field.value]}</div>
+      {fields.map((field, key) => (
+        <div key={key} className={classRow}>
+          {product[field.value]}
+        </div>
       ))}
-      <div>
-        <button class="btn bg-warning px-3 py-1">
+      <div className={classRow}>
+        <button onClick={update} className="btn bg-warning px-3 py-1">
           <FontAwesomeIcon className="mx-1" icon={faPencilAlt} />
         </button>
-        <button class="btn bg-danger px-3 py-1">
+        <button onClick={delet} className="btn bg-danger px-3 py-1">
           <FontAwesomeIcon className="mx-1" icon={faTrash} />
         </button>
       </div>
     </>
   );
 };
-const Table = ({ products }) => (
+const Table = ({ products, update, delet }) => (
   <div className="grid-container">
-    {fields.map((field) => (
-      <div class="header">{field.label}</div>
+    {fields.map((field, key) => (
+      <div key={key} className="header">
+        {field.label}
+      </div>
     ))}
-    <div class="header">Actions</div>
-    {products.map((product) => (
-      <Product product={product} />
+    <div className="header">Actions</div>
+    {products.map((product, key) => (
+      <Product
+        key={key}
+        product={product}
+        row={key}
+        update={() => update(product)}
+        delet={() => delet(product)}
+      />
     ))}
   </div>
 );

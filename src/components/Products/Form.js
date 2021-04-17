@@ -8,17 +8,18 @@ const submitChoice = {
   delete: (product) => api.delete(product._id),
 };
 
-function useProduct({ productInit, action, update }) {
+function useProduct({ productInit, action, read }) {
   const [state, setState] = useState(productInit);
   const updateState = (newState) => {
     setState({ ...state, ...newState });
   };
   const methods = {
     updateProduct: ({target}) => updateState({ [target.name]: target.value }),
-    submit: async () => {
+    submit: async (evt) => {
+      evt.preventdefault()
       let obj = { ...state, value: parseFloat(state.value) };
       await submitChoice[action](obj);
-      update();
+      read();
     },
   };
   return [state, methods];
@@ -32,11 +33,11 @@ function useModal(close) {
   };
   return [modalRef, updateShow];
 }
-const Form = ({ action, productInit, close, update }) => {
+const Form = ({ action, productInit, close, read }) => {
   const [product, { updateProduct, submit }] = useProduct({
     productInit,
     action,
-    update,
+    read,
   });
   const [modalRef, updateShow] = useModal(close);
   return (
