@@ -1,6 +1,6 @@
 import api from "@app/apis/product";
 import React, { useState, useEffect } from "react";
-import "./index.scss";
+import "@css/products/index.scss";
 import Form from "./Form";
 import Table from "./Table";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
