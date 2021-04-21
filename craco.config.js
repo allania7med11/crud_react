@@ -7,9 +7,9 @@ module.exports = {
   },
   webpack: {
     alias: {
-      "@app": path.join(path.resolve(__dirname, "src")),
-      "@css": path.join(path.resolve(__dirname, "src/assets/css")),
-      "@cps": path.join(path.resolve(__dirname, "src/components")),
+      "@app": path.join(path.resolve(__dirname, "src/")),
+      "@css": path.join(path.resolve(__dirname, "src/assets/css/")),
+      "@cps": path.join(path.resolve(__dirname, "src/components/")),
     },
   },
 };
