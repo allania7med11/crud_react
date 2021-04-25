@@ -9,8 +9,8 @@ import {
 } from "@fortawesome/free-solid-svg-icons";
 const submitChoice = {
   create: (product) => api.create(product),
-  update: (product) => api.update(product._id, product),
-  delete: (product) => api.delete(product._id),
+  update: (product) => api.update(product.id, product),
+  delete: (product) => api.delete(product.id),
 };
 
 function useProduct({ productInit, action, read }) {
