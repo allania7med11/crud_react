@@ -10,6 +10,7 @@ module.exports = {
       "@app": path.join(path.resolve(__dirname, "src")),
       "@css": path.join(path.resolve(__dirname, "src/assets/css")),
       "@cps": path.join(path.resolve(__dirname, "src/components")),
+      "@actions": path.join(path.resolve(__dirname, "src/actions")),
     },
   },
 };

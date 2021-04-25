@@ -7,6 +7,11 @@ const initial = {
     description: "",
   },
   list: [],
+  fields : [
+    { label: "Name", value: "name" },
+    { label: "Price", value: "price" },
+    { label: "Description", value: "description" },
+  ]
 };
 
 function product(state = initial, { type, payload }) {

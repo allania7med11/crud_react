@@ -1,48 +1,30 @@
 import "@css/Table.scss";
-import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { faPencilAlt, faTrash } from "@fortawesome/free-solid-svg-icons";
-const fields = [
-  { label: "Name", value: "name" },
-  { label: "Price", value: "price" },
-  { label: "Description", value: "description" },
-];
-const Product = ({ product, row, update, delet }) => {
-  var classRow = `item col rg_${Number(row) % 2}`;
+import React, { useEffect } from "react";
+import Product from "./Product";
+import { useSelector, useDispatch } from "react-redux";
+import { readProducts } from "@actions/product";
+
+const Table = () => {
+  const [fields, products] = useSelector((state) => [
+    state.product.fields,
+    state.product.list,
+  ]);
+  const dispatch = useDispatch();
+  useEffect(() => {
+    dispatch(readProducts());
+  }, [dispatch]);
   return (
-    <>
+    <div className="grid-container">
       {fields.map((field, key) => (
-        <div key={key} className={classRow}>
-          {product[field.value]}
+        <div key={key} className="header">
+          {field.label}
         </div>
       ))}
-      <div className={classRow}>
-        <button onClick={update} className="btn bg-warning px-3 py-1">
-          <FontAwesomeIcon className="mx-1" icon={faPencilAlt} />
-        </button>
-        <button onClick={delet} className="btn bg-danger px-3 py-1">
-          <FontAwesomeIcon className="mx-1" icon={faTrash} />
-        </button>
-      </div>
-    </>
+      <div className="header">Actions</div>
+      {products.map((product, key) => (
+        <Product key={key} fields={fields} product={product} row={key} />
+      ))}
+    </div>
   );
 };
-const Table = ({ products, update, delet }) => (
-  <div className="grid-container">
-    {fields.map((field, key) => (
-      <div key={key} className="header">
-        {field.label}
-      </div>
-    ))}
-    <div className="header">Actions</div>
-    {products.map((product, key) => (
-      <Product
-        key={key}
-        product={product}
-        row={key}
-        update={() => update(product)}
-        delet={() => delet(product)}
-      />
-    ))}
-  </div>
-);
 export default Table;

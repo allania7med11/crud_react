@@ -1,4 +1,4 @@
-import api from "@app/apis/product";
+import { updateProducts,close } from "@actions/product";
 import React, { useRef, useState } from "react";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import {
@@ -7,14 +7,10 @@ import {
   faPencilAlt,
   faTrash,
 } from "@fortawesome/free-solid-svg-icons";
-const submitChoice = {
-  create: (product) => api.create(product),
-  update: (product) => api.update(product.id, product),
-  delete: (product) => api.delete(product.id),
-};
+import { useSelector, useDispatch } from "react-redux";
 
-function useProduct({ productInit, action, read }) {
-  const [state, setState] = useState(productInit);
+function useProduct({ current, action, dispatch }) {
+  const [state, setState] = useState(current);
   const updateState = (newState) => {
     setState({ ...state, ...newState });
   };
@@ -22,18 +18,17 @@ function useProduct({ productInit, action, read }) {
     updateProduct: ({ target }) => updateState({ [target.name]: target.value }),
     submit: async (evt) => {
       evt.preventDefault();
-      let obj = { ...state, value: parseFloat(state.value) };
-      await submitChoice[action](obj);
-      read();
+      let product = { ...state, value: parseFloat(state.value) };
+      dispatch(updateProducts({ action, product }))
     },
   };
   return [state, methods];
 }
-function useModal(close) {
+function useModal(dispatch) {
   const modalRef = useRef();
   const updateShow = (evt) => {
     if (evt.target === modalRef.current) {
-      close();
+      dispatch(close());
     }
   };
   return [modalRef, updateShow];
@@ -55,13 +50,18 @@ const actionsInf = {
     text: "Delete",
   },
 };
-const Form = ({ action, productInit, close, read }) => {
-  const [product, { updateProduct, submit }] = useProduct({
-    productInit,
-    action,
-    read,
+const Form = () => {
+  const { action, current } = useSelector((state) => {
+    let { action, current } = state.product;
+    return { action, current };
   });
-  const [modalRef, updateShow] = useModal(close);
+  const dispatch = useDispatch();
+  const [product, { updateProduct, submit }] = useProduct({
+    current,
+    action,
+    dispatch,
+  });
+  const [modalRef, updateShow] = useModal(dispatch);
   const actionInf = actionsInf[action];
   return (
     <div ref={modalRef} onClick={updateShow} className="modal">
