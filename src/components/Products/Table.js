@@ -1,6 +1,7 @@
 import "@css/Table.scss";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faPencilAlt, faTrash } from "@fortawesome/free-solid-svg-icons";
+import React from "react";
 const fields = [
   { label: "Name", value: "name" },
   { label: "Price", value: "price" },
@@ -26,7 +27,9 @@ const Product = ({ product, row, update, delet }) => {
     </>
   );
 };
-const Table = ({ products, update, delet }) => (
+const Table = ({ products, update, delet }) => {
+ // const state = useSelector
+  return (
   <div className="grid-container">
     {fields.map((field, key) => (
       <div key={key} className="header">
@@ -44,5 +47,9 @@ const Table = ({ products, update, delet }) => (
       />
     ))}
   </div>
-);
+)};
 export default Table;
+function useSelector(arg0) {
+  throw new Error("Function not implemented.");
+}
+
